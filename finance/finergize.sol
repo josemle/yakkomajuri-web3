@@ -2,6 +2,9 @@ pragma solidity^0.4.25;
 
 contract InvestmentPlatform {
     
+    // Contract built for a hackathon - P2P investing platform
+    // Needs updates - do not use in production
+    
     // ADD MODIFIERS
     // ADD STATUS STATS
     // ADD stringsEqual
