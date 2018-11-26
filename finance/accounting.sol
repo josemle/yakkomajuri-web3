@@ -1,5 +1,8 @@
 pragma solidity^0.4.25;
 
+// Simple implementation of real-time in-chain accounting
+// Accounting terminology incorrectly applied for simplicity
+
 contract FinancialReport {
     
     uint totalrevenue;
@@ -34,7 +37,7 @@ contract FinancialReport {
         startdate = _startdate;
         today = block.timestamp;
         chairperson = msg.sender;
-        conversion = 1000000000000000000;
+        conversion = 1 ether;
     }
     
     modifier onlyboard() {
@@ -55,14 +58,14 @@ contract FinancialReport {
     
     function executePayment(address _to, uint _value) public onlyboard {
         uint value;
-        value = _value*1000000000000000000;
+        value = _value*1 ether;
         _to.transfer(value);
         expenses += value;
     }
     
     function paySalary(address _to, uint _value) public onlyboard {
         uint value;
-        value = _value*1000000000000000000;
+        value = _value*conversion;
         _to.transfer(value);
         salaries += value;
     }
@@ -72,7 +75,7 @@ contract FinancialReport {
             require (stringsEqual(assetlist[i].name, _name) == false); 
         }
         uint value;
-        value = _value*1000000000000000000;
+        value = _value*conversion;
         assetlist.push(Asset(_name, value, true, 0, "Not sold yet"));
         assets += value;
         assetnames[_name] = ID;
@@ -85,7 +88,7 @@ contract FinancialReport {
             uint n;
             n = assetnames[_assetname];
             uint value;
-            value = _value*1000000000000000000;
+            value = _value*conversion;
             assetlist[n].currentlyowned = false;
             assetlist[n].soldfor = value;
             assetlist[n].soldto = _soldto;
