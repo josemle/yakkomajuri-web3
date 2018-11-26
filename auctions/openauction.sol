@@ -1,8 +1,10 @@
-pragma solidity^0.4.25;
+pragma solidity^0.5.0;
+
+// Simple auction implementation
 
 contract OpenAuction {
     
-    address seller;
+    address payable seller;
     address highestBidder;
     uint highestBid;
     uint today;
@@ -18,10 +20,7 @@ contract OpenAuction {
     
     constructor() public {
         seller = msg.sender;
-        highestBid = 0;
         today = block.timestamp;
-        bidnumber = 0;
-        duration = 0;
         ended = false;
         settime = false;
     }
@@ -37,7 +36,6 @@ contract OpenAuction {
     
     function submitBid() public payable {
         require (block.timestamp < duration);
-        require (msg.value > 0);
         require (msg.value > highestBid);
         highestBid = msg.value;
         highestBidder = msg.sender;
@@ -45,7 +43,7 @@ contract OpenAuction {
     }
     
     function seeHighestBid() public view returns(uint, address){
-        return (highestBid/1000000000000000000, highestBidder);
+        return (highestBid/1 ether, highestBidder);
     }
     
     function hasAuctionEnded() internal view returns (bool) {
@@ -54,15 +52,17 @@ contract OpenAuction {
     }
     
     function endAuction() public {
-        require (hasAuctionEnded() == true);
+        require (hasAuctionEnded());
         seller.transfer(highestBid); 
         bidReturns[highestBidder] -= highestBid;
         ended = true;
     }
     
     function giveMeMyMoneyBack() public {
-      require (ended == true);
-      msg.sender.transfer(bidReturns[msg.sender]);
+      require (ended);
+      uint money = bidReturns[msg.sender];
+      bidReturns[msg.sender] = 0;
+      msg.sender.transfer(money);
     }
    
 }
