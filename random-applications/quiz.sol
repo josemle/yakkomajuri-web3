@@ -2,6 +2,9 @@ pragma solidity^0.4.25;
 
 contract Quiz {
    
+   // Assumes code will not be looked at by participants
+   // Very long method - Answers are hard-coded
+   
    address owner;
     
     string yes;
