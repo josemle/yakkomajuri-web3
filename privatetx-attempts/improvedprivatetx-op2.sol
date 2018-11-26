@@ -1,6 +1,9 @@
 pragma solidity^0.4.25;
 
 contract PrivateTxs {
+
+// DO NOT USE IN PRODUCTION
+// In-chain hashing does not provide privacy - Inputs are visible
     
     mapping(bytes32 => uint) balances;
     mapping(bytes32 => uint) pendingtx;
