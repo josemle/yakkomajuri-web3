@@ -1,5 +1,8 @@
 pragma solidity^0.4.25;
 
+// First implementation 
+// DO NOT USE IN PRODUCTION
+
 contract PrivateTxs {
     
     mapping(bytes32 => uint) balances;
