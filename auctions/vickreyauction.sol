@@ -2,13 +2,15 @@ pragma solidity^0.4.25;
 
 contract BlindAuction {
     
+    // Theoretical implementation of a blind auction
+    // DO NOT USE IN PRODUCTION - Bid value hashing must be done off-chain for full privacy
+    
     address seller;
     uint today;
     
     modifier onlyseller() {
-        if (msg.sender == seller) {
+        require (msg.sender == seller);
         _;
-        }
     }
     
     uint highestBid;
@@ -27,13 +29,6 @@ contract BlindAuction {
     constructor() public {
         seller = msg.sender;
         today = block.timestamp;
-        endauction = false;
-        auctionwon = false;
-        auctionDuration = 0;
-        revealDuration = 0;
-        tempRevealDuration = 0;
-        highestBid = 0;
-        useralreadywithdrew = false;
     }
     
     function setAuctionTime(uint _auctionDuration, uint _revealDuration) public onlyseller {
@@ -45,7 +40,7 @@ contract BlindAuction {
         bytes32 hash;
         hash = keccak256(abi.encodePacked(msg.sender));
         uint bidvalue;
-        bidvalue = _bidvalue*1000000000000000000;
+        bidvalue = _bidvalue*1 ether;
         require (bidplaced[hash] == false);
         require (auctionEnded() == false);
         bids[hash] = keccak256(abi.encodePacked(bidvalue, msg.sender));
@@ -77,7 +72,7 @@ contract BlindAuction {
     }
     
     function getHighestBid() public view returns (uint) {
-        return (highestBid/1000000000000000000);
+        return (highestBid/1 ether);
     }
     
     function ClaimWin() public {
@@ -96,7 +91,7 @@ contract BlindAuction {
         auctiontimeleft = (auctionDuration - block.timestamp)/60;
         revealtimeleft = (revealDuration - block.timestamp)/60;
         if (auctionEnded() == false) return("Auction Phase", auctiontimeleft);
-        if (auctionEnded() == true) return("Reveal Phase", revealtimeleft);
+        if (auctionEnded()) return("Reveal Phase", revealtimeleft);
     }
     
     function withdrawLostBid(uint _value) public {
@@ -104,7 +99,7 @@ contract BlindAuction {
         require (useralreadywithdrew == false);
         bytes32 hash;
         uint value;
-        value = _value*1000000000000000000;
+        value = _value*1 ether;
         hash = keccak256(abi.encodePacked(msg.sender));
         require (keccak256(abi.encodePacked(value, msg.sender)) == bids[hash]);
         msg.sender.transfer(value);
