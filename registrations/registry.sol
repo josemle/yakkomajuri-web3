@@ -1,4 +1,4 @@
-pragma solidity^0.4.25;
+pragma solidity^0.5.0;
 
 // Contract still needs optimization and testing
 
@@ -92,9 +92,9 @@ contract DocumentRegistry is RegistryStructure {
     
     // Register a document - anyone is allowed to
     function registerDocument(
-        string _name, 
-        string _metadata,
-        string _filehash
+        string memory _name, 
+        string memory _metadata,
+        string memory _filehash
         ) 
         public 
         payable
@@ -114,14 +114,14 @@ contract DocumentRegistry is RegistryStructure {
             bytes32 fileHash = sha256(abi.encodePacked(_filehash));
             // No two registered hashes can be equal
             require(registry[hash].isEntity == false); 
-            current.transfer(msg.value); // Price paid goes to current owner
+            address(uint160(current)).transfer(msg.value); // Price paid goes to current owner
                 registry[hash] = Document(
                     _name, 
                     _metadata,
                     block.timestamp, 
                     id,
                     msg.sender,
-                    0,
+                    address(0),
                     fileHash,
                     true
                 );
@@ -134,7 +134,7 @@ contract DocumentRegistry is RegistryStructure {
                     block.timestamp, 
                     id,
                     msg.sender,
-                    0,
+                    address(0),
                     fileHash,
                     true
                 ));
@@ -144,10 +144,10 @@ contract DocumentRegistry is RegistryStructure {
     
      // Register a multi-sig document 
     function registerMultiSig(
-        string _name, 
-        string _metadata,
+        string memory _name, 
+        string memory _metadata,
         address _address,
-        string _filehash
+        string memory _filehash
         ) 
         public 
         payable
@@ -167,7 +167,7 @@ contract DocumentRegistry is RegistryStructure {
             bytes32 fileHash = sha256(abi.encodePacked(_filehash));
             // No two registered hashes can be equal
             require(registry[hash].isEntity == false); 
-            current.transfer(msg.value); // Price paid goes to current owner
+            address(uint160(current)).transfer(msg.value); // Price paid goes to current owner
                 // If document is multi-sig, push it to the temporary registry
                 tempRegistry[hash] = TemporaryDocument(
                     _name, 
@@ -195,7 +195,7 @@ contract DocumentRegistry is RegistryStructure {
     
     // For multi-sig documents, second party must sign
     function signDocument(
-        string _name, 
+        string memory _name, 
         uint16 _index
         ) 
         public
@@ -231,14 +231,14 @@ contract DocumentRegistry is RegistryStructure {
     
     // Check info for a given Document
     function checkDocument(
-        string _name, 
+        string memory _name, 
         uint16 _index
         ) 
         public 
         view 
         returns(
-            string,
-            string,
+            string memory,
+            string memory,
             uint, 
             address,
             address
@@ -256,8 +256,8 @@ contract DocumentRegistry is RegistryStructure {
     
     // Register your address as an Institution
     function registerAddress(
-        string _name, 
-        string _description) 
+        string memory _name, 
+        string memory _description) 
         public
         payable
         {
@@ -280,8 +280,8 @@ contract DocumentRegistry is RegistryStructure {
         public 
         view 
         returns(
-        string,
-        string
+        string memory,
+        string memory
         )
         {
         return(
@@ -292,8 +292,8 @@ contract DocumentRegistry is RegistryStructure {
     
     // Change your public info - Should we allow address changes?
     function updateMyInfo(
-        string _name, 
-        string _description
+        string memory _name, 
+        string memory _description
         )
         public
         payable
@@ -312,9 +312,9 @@ contract DocumentRegistry is RegistryStructure {
         }
         
         function verifyHash(
-            string _name, 
+            string memory _name, 
             uint16 _index, 
-            string _filehash
+            string memory _filehash
             ) 
             public 
             view 
