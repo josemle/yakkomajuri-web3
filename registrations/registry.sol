@@ -17,7 +17,7 @@ contract RegistryStructure {
     }
     
     address public creator; // Creator is the first owner, can set more
-    address public current;
+    address payable public current;
     
     constructor() public {
         creator = msg.sender; // Publishing address is creator
@@ -75,7 +75,7 @@ contract RegistryStructure {
 contract DocumentRegistry is RegistryStructure {
     
     // 'creator' can set other addresses for security measures
-    function safetyMeasures(address _s1, address _current) public onlyOwners {
+    function safetyMeasures(address _s1, address payable _current) public onlyOwners {
         owners.push(_s1);
         current = _current; // Sets the address to receive payments
     }
@@ -114,7 +114,7 @@ contract DocumentRegistry is RegistryStructure {
             bytes32 fileHash = sha256(abi.encodePacked(_filehash));
             // No two registered hashes can be equal
             require(registry[hash].isEntity == false); 
-            address(uint160(current)).transfer(msg.value); // Price paid goes to current owner
+            current.transfer(msg.value); // Price paid goes to current owner
                 registry[hash] = Document(
                     _name, 
                     _metadata,
@@ -167,7 +167,7 @@ contract DocumentRegistry is RegistryStructure {
             bytes32 fileHash = sha256(abi.encodePacked(_filehash));
             // No two registered hashes can be equal
             require(registry[hash].isEntity == false); 
-            address(uint160(current)).transfer(msg.value); // Price paid goes to current owner
+            current.transfer(msg.value); // Price paid goes to current owner
                 // If document is multi-sig, push it to the temporary registry
                 tempRegistry[hash] = TemporaryDocument(
                     _name, 
@@ -245,9 +245,11 @@ contract DocumentRegistry is RegistryStructure {
             )
         {
             bytes32 hash = sha256(abi.encodePacked(_name, _index));
+            string memory name = registry[hash].name;
+            string memory metadata = registry[hash].metadata;
             return (
-                registry[hash].name,
-                registry[hash].metadata,
+                name,
+                metadata,
                 registry[hash].timestamp,
                 registry[hash].registrant,
                 registry[hash].signee
@@ -284,9 +286,12 @@ contract DocumentRegistry is RegistryStructure {
         string memory
         )
         {
+            string memory description = registered[_address].description;
+            string memory name = registered[_address].name;
+
         return(
-            registered[_address].name, 
-            registered[_address].description
+            name,  
+            description
             );
     }
     
