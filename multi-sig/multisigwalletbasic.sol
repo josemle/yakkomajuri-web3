@@ -9,13 +9,12 @@ contract MultiSig {
     address five;
     
     modifier onlysignees() {
-        if (msg.sender == one ||
+        require (msg.sender == one ||
         msg.sender == two ||
         msg.sender == three ||
         msg.sender == four ||
-        msg.sender == five) {
+        msg.sender == five);
             _;
-        }
     }
     
     constructor() public {
@@ -59,7 +58,7 @@ contract MultiSig {
     
     function executePayment() public onlysignees {
         require (proposalaccepted == true);
-        to.transfer(value*1000000000000000000);
+        to.transfer(value*1 ether);
         actionexecuted = true;
     }
     
