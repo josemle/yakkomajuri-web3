@@ -32,8 +32,7 @@ contract TestToken {
 
     function setName(string _name) public payable {
         require (msg.value >= price);
-        require (names[_name] == address(0) 
-            || names[_name] == msg.sender);
+        require (names[_name] == address(0));
         names[_name] = msg.sender;
         nameValue[_name] = msg.value;
     }
