@@ -38,7 +38,7 @@ contract RockPaperScissors {
         payoffMatrix[paper][scissors] = 2;
     }
     
-    function play(bytes32 _encryptedPlay) public payable {
+    function enterGame(bytes32 _encryptedPlay) public payable {
         require(numberOfPlayers < 2);
         require(encryptedPlay[msg.sender] == bytes32(0));
         if (numberOfPlayers == 0) {
