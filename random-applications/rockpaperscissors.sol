@@ -23,6 +23,8 @@ contract RockPaperScissors {
     
     bool revealStarted;
     
+    address payable owner;
+    
     constructor() public {
         rock = sha256(abi.encodePacked("rock"));
         paper = sha256(abi.encodePacked("paper"));
@@ -36,6 +38,7 @@ contract RockPaperScissors {
         payoffMatrix[rock][paper] = 2;
         payoffMatrix[scissors][rock] = 2;
         payoffMatrix[paper][scissors] = 2;
+        owner = msg.sender;
     }
     
     function enterGame(bytes32 _encryptedPlay) public payable {
@@ -99,7 +102,13 @@ contract RockPaperScissors {
             player2.transfer(contractBalance);
             reset();
         }
-        else { revert(); }
+        else { owner.transfer(contractBalance); }
+    }
+    
+    function refund() public {
+        require(numberOfPlayers == 1);
+        require(msg.sender == player1);
+        player1.transfer(address(this).balance);
     }
     
     function reset() internal {
