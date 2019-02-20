@@ -109,6 +109,7 @@ contract RockPaperScissors {
         require(numberOfPlayers == 1);
         require(msg.sender == player1);
         player1.transfer(address(this).balance);
+        reset();
     }
     
     function reset() internal {
