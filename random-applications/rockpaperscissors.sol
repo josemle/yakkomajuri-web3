@@ -120,6 +120,10 @@ contract RockPaperScissors {
         player2 = address(0);
         p1 = bytes32(0);
         p2 = bytes32(0);
+        encrypted[player1] = bytes32(0);
+        encrypted[player2] = bytes32(0);
+        revealed[player1] = false;
+        revealed[player2] = false;
         revealStarted = false;
     }
     
