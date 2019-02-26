@@ -56,7 +56,7 @@ contract RockPaperScissors {
         encryptedPlay[msg.sender] = _encryptedPlay;
     }
     
-    function reveal(string memory _play, uint _r) public {
+    function reveal(string memory _play, string memory _nonce) public {
         require(numberOfPlayers == 2);
         require(revealed[msg.sender] == false);
         if (revealStarted == false) {
@@ -64,7 +64,7 @@ contract RockPaperScissors {
             timeStarted = block.timestamp;
         }
         revealed[msg.sender] == true;
-        bytes32 hash = sha256(abi.encodePacked(_play, _r));
+        bytes32 hash = sha256(abi.encodePacked(_play, _nonce));
         bytes32 play = sha256(abi.encodePacked(_play));
         require (play == rock || play == scissors || play == rock);
         require(encryptedPlay[msg.sender] == hash);
@@ -120,8 +120,8 @@ contract RockPaperScissors {
         player2 = address(0);
         p1 = bytes32(0);
         p2 = bytes32(0);
-        encrypted[player1] = bytes32(0);
-        encrypted[player2] = bytes32(0);
+        encryptedPlay[player1] = bytes32(0);
+        encryptedPlay[player2] = bytes32(0);
         revealed[player1] = false;
         revealed[player2] = false;
         revealStarted = false;
