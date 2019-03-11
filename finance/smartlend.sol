@@ -218,5 +218,14 @@ contract SmartLend is Storage {
             uint cScore = 100*(loanPctg*3 + nUsersPctg + nLoansPctg + timePctg/2)/ 550;
             return cScore;
     }
+    
+    function creditScore(bytes32 _user) public view returns (uint) {
+        return users[_user].creditScore;
+    }
+    
+        
+    function numberOfLoans(bytes32 _user) public view returns (uint) {
+        return users[_user].nLoans;
+    }
 
 }
