@@ -85,3 +85,7 @@ To get started with the contracts in this repository, you need:
    In the root directory of the repository, run:
    ```bash
    npm install
+2. Aptos Contracts
+   aptos move init
+   aptos move compile
+   aptos move publish
